@@ -8,7 +8,7 @@ yellow="\033[1;33m"
 nc="\033[0m"
 
 # Configuration
-BASE_URL="https://raw.githubusercontent.com/SSH_websocket_Full_Script/AcideBoy/master"
+BASE_URL="https://raw.githubusercontent.com/AcideBoy/Websocket_FullScript/master"
 export DEBIAN_FRONTEND=noninteractive
 
 # Global variables
@@ -75,13 +75,14 @@ update_system() {
     apt-get purge -y ufw firewalld exim4 samba* apache2* bind9* sendmail* unscd > /dev/null 2>&1 || log_warning "Some packages could not be purged (may not be installed)."
     apt autoremove -y > /dev/null 2>&1 && apt autoclean -y > /dev/null 2>&1
     log_success "System updated."
+    
 }
 
 # Install required packages
 install_packages() {
     log_info "Installing packages..."
     apt install -y \
-      netfilter-persistent iptables-persistent screen curl jq bzip2 gzip vnstat coreutils rsyslog \
+       screen curl jq bzip2 gzip vnstat coreutils rsyslog \
       zip unzip net-tools nano lsof shc gnupg dos2unix dirmngr bc \
       stunnel4 nginx dropbear python3 python3-pip socat xz-utils sshguard squid > /dev/null 2>&1
     if [[ $? -ne 0 ]]; then 
@@ -211,32 +212,20 @@ setup_badvpn() {
 # Apply firewall rules
 apply_firewall_rules() {
     log_info "Applying firewall rules..."
-    iptables_rules=(
-      "get_peers" "announce_peer" "find_node" "BitTorrent"
-      "BitTorrent protocol" "peer_id=" ".torrent"
-      "announce.php?passkey=" "torrent" "announce" "info_hash"
-    )
-    for s in "${iptables_rules[@]}"; do
-      iptables -A FORWARD -m string --string "$s" --algo bm -j DROP
-    done
-    iptables-save > /etc/iptables.up.rules
-    netfilter-persistent save > /dev/null 2>&1 && netfilter-persistent reload > /dev/null 2>&1
-    log_success "Firewall rules applied."
+    
 
     iptables -I INPUT -p tcp --dport 80 -j ACCEPT
     iptables -I INPUT -p tcp --dport 443 -j ACCEPT
-    iptables -I INPUT -p tcp --dport 7300 -j ACCEPT
 
-    if grep -q "--dport 22" /etc/iptables/rules.v4; then
-      sed -i "/--dport 22 -j ACCEPT/a \\n-A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT\n-A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT\n-A INPUT -p tcp -m state --state NEW -m tcp --dport 8080 -j ACCEPT\n-A INPUT -p tcp -m state --state NEW -m tcp --dport 7300 -j ACCEPT" /etc/iptables/rules.v4
+    if grep -q "dport 22" /etc/iptables/rules.v4; then
+      sed -i "/--dport 22 -j ACCEPT/a \\n-A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT\n-A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT\n-A INPUT -p tcp -m state --state NEW -m tcp --dport 8080 -j ACCEPT" /etc/iptables/rules.v4
     else
       echo "-A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT" >> /etc/iptables/rules.v4
       echo "-A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT" >> /etc/iptables/rules.v4
       echo "-A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT" >> /etc/iptables/rules.v4
       echo "-A INPUT -p tcp -m state --state NEW -m tcp --dport 8080 -j ACCEPT" >> /etc/iptables/rules.v4
-      echo "-A INPUT -p tcp -m state --state NEW -m tcp --dport 7300 -j ACCEPT" >> /etc/iptables/rules.v4
     fi
-
+    log_success "Firewall rules applied."
     netfilter-persistent save > /dev/null 2>&1 || log_warning "Failed to save iptables rules."
 }
 
@@ -246,7 +235,7 @@ install_scripts() {
     log_info "Installing scripts..."
     declare -A script_dirs=(
       [menu]="menu.sh"
-      [ssh]="create-account.sh delete-account.sh edit-banner.sh edit-response.sh lock-unlock.sh renew-account.sh"
+      [ssh]="create-account.sh delete-account.sh much.sh edit-banner.sh lock-unlock.sh renew-account.sh"
       [system]="change-domain.sh system-info.sh clean-expired-accounts.sh"
     )
     for dir in "${!script_dirs[@]}"; do
