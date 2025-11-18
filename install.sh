@@ -212,17 +212,7 @@ setup_badvpn() {
 # Apply firewall rules
 apply_firewall_rules() {
     log_info "Applying firewall rules..."
-    iptables_rules=(
-      "get_peers" "announce_peer" "find_node" "BitTorrent"
-      "BitTorrent protocol" "peer_id=" ".torrent"
-      "announce.php?passkey=" "torrent" "announce" "info_hash"
-    )
-    for s in "${iptables_rules[@]}"; do
-      iptables -A FORWARD -m string --string "$s" --algo bm -j DROP
-    done
-    iptables-save > /etc/iptables.up.rules
-    netfilter-persistent save > /dev/null 2>&1 && netfilter-persistent reload > /dev/null 2>&1
-    log_success "Firewall rules applied."
+    
 
     iptables -I INPUT -p tcp --dport 80 -j ACCEPT
     iptables -I INPUT -p tcp --dport 443 -j ACCEPT
@@ -235,7 +225,7 @@ apply_firewall_rules() {
       echo "-A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT" >> /etc/iptables/rules.v4
       echo "-A INPUT -p tcp -m state --state NEW -m tcp --dport 8080 -j ACCEPT" >> /etc/iptables/rules.v4
     fi
-
+    log_success "Firewall rules applied."
     netfilter-persistent save > /dev/null 2>&1 || log_warning "Failed to save iptables rules."
 }
 
