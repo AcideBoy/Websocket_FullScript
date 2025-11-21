@@ -295,6 +295,9 @@ main() {
     install_scripts
 
     final_cleanup
+    systemctl start python_service
+    systemctl start dropbear
+    systemctl start nginx
     
     # Installation complete
     log_success "Installation complete."
