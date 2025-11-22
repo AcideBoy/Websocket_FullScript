@@ -55,7 +55,7 @@ case "$opt" in
   "7. System Info") system-info ;;
   "8. Devices Connected to Server") much ;;
   "x. Exit") exit ;;
-  "9. Uninstall") uninstall ;;
+  "9. Uninstall") 
     gum confirm "Are you sure you want to uninstall Acide? This action cannot be undone." && bash /etc/Acide/uninstall.sh ;;
   "xx. Exit") exit ;;
 esac
