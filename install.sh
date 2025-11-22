@@ -8,7 +8,7 @@ yellow="\033[1;33m"
 nc="\033[0m"
 
 # Configuration
-BASE_URL="https://raw.githubusercontent.com/AcideBoy/Websocket_FullScript/master"
+BASE_URL="https://raw.githubusercontent.com/AcideBoy/Websocket_FullScript/main"
 export DEBIAN_FRONTEND=noninteractive
 
 # Global variables
