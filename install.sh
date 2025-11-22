@@ -285,6 +285,7 @@ main() {
     install_gum
     disable_ipv6
     configure_dropbear
+    setup_websocket_service
     setup_ssl_cert
     configure_nginx
     setup_badvpn
