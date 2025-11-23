@@ -53,7 +53,7 @@ case "$opt" in
   "5. Edit Banner") edit-banner ;;
   "6. Change Domain") change-domain ;;
   "7. System Info") system-info ;;
-  "8. SlowDNS") slowdns ;;
+  "8. SlowDNS") slowdns_menu ;;
   "9. Devices Connected to Server") much ;;
   "10. Uninstall") gum confirm "Are you sure you want to uninstall Acide? This action cannot be undone." && bash /etc/Acide/uninstall.sh ;;
   "x. Exit") exit ;;
