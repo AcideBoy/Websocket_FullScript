@@ -39,8 +39,9 @@ opt=$(gum choose --limit=1 --header "  Choose" \
   "5. Edit Banner" \
   "6. Change Domain" \
   "7. System Info" \
-  "8. Devices Connected to Server" \
-  "9. Uninstall" \
+  "8. SlowDNS"\
+  "9. Devices Connected to Server" \
+  "10. Uninstall" \
   "x. Exit")
 
 clear
@@ -52,7 +53,8 @@ case "$opt" in
   "5. Edit Banner") edit-banner ;;
   "6. Change Domain") change-domain ;;
   "7. System Info") system-info ;;
-  "8. Devices Connected to Server") much ;;
-  "9. Uninstall") gum confirm "Are you sure you want to uninstall Acide? This action cannot be undone." && bash /etc/Acide/uninstall.sh ;;
+  "8. SlowDNS") slowdns ;;
+  "9. Devices Connected to Server") much ;;
+  "10. Uninstall") gum confirm "Are you sure you want to uninstall Acide? This action cannot be undone." && bash /etc/Acide/uninstall.sh ;;
   "x. Exit") exit ;;
 esac
