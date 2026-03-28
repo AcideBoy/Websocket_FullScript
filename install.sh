@@ -95,16 +95,35 @@ install_packages() {
 
 # Install gum tool
 install_gum() {
-    log_info "Installing gum..."
-    wget -qO- https://github.com/charmbracelet/gum/releases/download/v0.16.2/gum_0.16.2_Linux_x86_64.tar.gz | \
-      tar -xz -C /usr/local/bin --strip-components=1 --wildcards '*/gum'
-    if [[ -f /usr/local/bin/gum ]]; then
-      chmod +x /usr/local/bin/gum
-      log_success "gum installed."
-    else
-      log_error "Failed to install gum."
+  log_info "Installing gum..."
+
+  local arch
+  local url
+
+  arch="$(uname -m)"
+
+  case "$arch" in
+    aarch64|arm64)
+      url="https://github.com/charmbracelet/gum/releases/download/v0.16.2/gum_0.16.2_Linux_arm64.tar.gz"
+      ;;
+    x86_64|amd64)
+      url="https://github.com/charmbracelet/gum/releases/download/v0.16.2/gum_0.16.2_Linux_x86_64.tar.gz"
+      ;;
+    *)
+      log_error "Unsupported architecture: $arch"
       exit 1
-    fi
+      ;;
+  esac
+
+  wget -qO- "$url" | tar -xz -C /usr/local/bin --strip-components=1 --wildcards '*/gum'
+
+  if [[ -f /usr/local/bin/gum ]]; then
+    chmod +x /usr/local/bin/gum
+    log_success "gum installed."
+  else
+    log_error "Failed to install gum."
+    exit 1
+  fi
 }
 
 # Disable IPv6
